@@ -17,6 +17,19 @@ namespace Collisions
             TestVectors();
 
             TestShapes();
+
+            TestRectangleCollisions();
+        }
+
+        private static void TestRectangleCollisions()
+        {
+            var a = new Rectangle(new Vector(1, 1), new Vector(4, 4));
+            var b = new Rectangle(new Vector(2, 2), new Vector(5, 5));
+            var c = new Rectangle(new Vector(6, 4), new Vector(4, 2));
+            Assert(a.CollidesWith(b));
+            Assert(b.CollidesWith(c));
+            Assert(!a.CollidesWith(c));
+            System.Console.WriteLine("Rectangles colliding with rectangles");
         }
 
         private static void TestShapes()
@@ -41,6 +54,11 @@ namespace Collisions
             float r = 4;
             var c1 = new Circle(c, r);
             System.Console.WriteLine($"Circle: {c1}");
+
+            var rec = new Rectangle(new Vector(2, 3), new Vector(6, 4));
+            System.Console.WriteLine(rec);
+
+            var orrec = new OrientedRectangle(new Vector(6, 4), new Vector(3, 2), 30);
         }
 
         private static void TestVectors()

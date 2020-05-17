@@ -83,10 +83,16 @@ namespace Collisions
             return radians * 180 / PI;
         }
 
+        #region Helpers
+
         static float PI => (float) Math.PI;
         static float Sin(float x) => (float) Math.Sin(x);
         static float Cos(float x) => (float) Math.Cos(x);
         static float Acos(float x) => (float) Math.Acos(x);
+
+        #endregion
+
+        #region Assertions 
 
         public static void AssertEqual(Vector a, Vector b)
         {
@@ -101,5 +107,7 @@ namespace Collisions
             Assert(Math.Abs(a - b) < FloatEqualityThreshold);
             WriteLine($"Assert passed {a}=~{b}");
         }
+
+        #endregion
     }
 }

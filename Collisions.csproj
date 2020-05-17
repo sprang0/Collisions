@@ -5,4 +5,16 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Company>Bad Kitty Games</Company>
+    <Configuration>Debug</Configuration>
+    <Copyright>2020</Copyright>
+    <Description>C# collision library based on '2D Collision Detection for Games'</Description>
+    <FileVersion>1.0.0.1</FileVersion>
+    <InformationalVersion>1.0</InformationalVersion>
+    <Product>Collision Library</Product>
+    <AssemblyTitle>Collision Library</AssemblyTitle>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+  </PropertyGroup>
+
 </Project>
