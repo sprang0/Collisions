@@ -15,5 +15,28 @@ namespace Collisions
         {
             return $"{{{Base}, {Direction}}}";
         }
+
+        public bool CollidesWith(Line line)
+        {
+            if (this.Direction.ParallelWith(line.Direction))
+                return this.EquivalentTo(line);
+            else return true;
+        }
+
+        public bool EquivalentTo(Line line)
+        {
+            if (!this.Direction.ParallelWith(line.Direction)) return false;
+
+            var d = this.Base.Subtract(line.Base);
+            return d.ParallelWith(this.Direction);
+        }
+
+        public bool IsOnOneSide(LineSegment segment)
+        {
+            var d1 = segment.Point1.Subtract(this.Base);
+            var d2 = segment.Point2.Subtract(this.Base);
+            var n = this.Direction.Rotate90;
+            return n.DotProduct(d1) * n.DotProduct(d2) > 0;
+        }
     }
 }

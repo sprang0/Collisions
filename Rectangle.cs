@@ -1,3 +1,5 @@
+using static Collisions.GameMath;
+
 namespace Collisions
 {
     public struct Rectangle
@@ -28,14 +30,8 @@ namespace Collisions
             var bBottom = rectangle.Origin.Y;
             var bTop = bBottom + rectangle.Size.Y;
 
-            return Overlapping(aLeft, aRight, bLeft, bRight) &&
-                Overlapping(aBottom, aTop, bBottom, bTop);
+            return OverlappingOnAxis(aLeft, aRight, bLeft, bRight) &&
+                OverlappingOnAxis(aBottom, aTop, bBottom, bTop);
         }
-
-        bool Overlapping(float minA, float maxA, float minB, float maxB)
-        {
-            return minB <= maxA && minA <= maxB;
-        }
-
     }
 }
