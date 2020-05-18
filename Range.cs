@@ -13,10 +13,7 @@ namespace Collisions
             Maximum = maximum;
         }
 
-        public override string ToString()
-        {
-            return $"{{{Minimum}, {Maximum}}}";
-        }
+        public override string ToString() => $"{{{Minimum}, {Maximum}}}";
 
         public void Sort()
         {
@@ -27,12 +24,17 @@ namespace Collisions
             this.Maximum = min;
         }
 
-        public Range Hull(Range range) => new Range((this.Minimum < range.Minimum ? this.Minimum : range.Minimum),
-            (this.Maximum > range.Maximum ? this.Maximum : range.Maximum));
+        public Range Hull(Range range) =>
+            new Range(this.Minimum.OrLesser(range.Minimum), this.Maximum.OrGreater(range.Maximum));
 
         public bool Overlaps(Range range)
         {
-            return OverlappingOnAxis(this.Minimum, this.Maximum, range.Minimum, range.Maximum);
+            return Overlapping(this.Minimum, this.Maximum, range.Minimum, range.Maximum);
+        }
+
+        public static bool Overlapping(float minA, float maxA, float minB, float maxB)
+        {
+            return minB <= maxA && minA <= maxB;
         }
     }
 }

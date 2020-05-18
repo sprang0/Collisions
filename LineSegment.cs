@@ -11,10 +11,7 @@ namespace Collisions
             Point2 = point2;
         }
 
-        public override string ToString()
-        {
-            return $"{{{Point1}, {Point2}}}";
-        }
+        public override string ToString() => $"{{{Point1}, {Point2}}}";
 
         public Range Project(Vector onto)
         {
@@ -40,20 +37,6 @@ namespace Collisions
             }
 
             return true;
-        }
-
-        public bool IsSeparatingAxis(OrientedRectangle orientedRectangle)
-        {
-            var rEdge0 = orientedRectangle.Edge(0);
-            var rEdge2 = orientedRectangle.Edge(2);
-            var n = this.Point1.Subtract(this.Point2);
-
-            var axisRange = this.Project(n);
-            var r0Range = rEdge0.Project(n);
-            var r2Range = rEdge2.Project(n);
-            var rProjection = r0Range.Hull(r2Range);
-
-            return !axisRange.Overlaps(rProjection);
         }
     }
 }

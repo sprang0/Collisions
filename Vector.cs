@@ -24,7 +24,7 @@ namespace Collisions
 
         public Vector Divide(float divisor) => new Vector(this.X / divisor, this.Y / divisor);
 
-        public Vector Negate => new Vector(-this.X, -this.Y);
+        public Vector Negated => new Vector(-this.X, -this.Y);
 
         public float Length => (float) Math.Sqrt(this.X * this.X + this.Y * this.Y);
 
@@ -33,26 +33,26 @@ namespace Collisions
             get
             {
                 var length = Length;
-                return (length > 0) ? Divide(length) : this;
+                return (length > 0) ? this.Divide(length) : this;
             }
         }
 
         public Vector Rotate(float degrees)
         {
-            var rads = DegreesToRadians(degrees);
-            var sin = Sin(rads);
-            var cos = Cos(rads);
+            var radians = degrees.ToRadians();
+            var sin = Sin(radians);
+            var cos = Cos(radians);
             return new Vector(this.X * cos - this.Y * sin, this.X * sin + this.Y * cos);
         }
 
-        public Vector Rotate90 => new Vector(-this.Y, this.X);
+        public Vector Rotated90 => new Vector(-this.Y, this.X);
 
         public float EnclosedAngle(Vector vector)
         {
-            var ua = UnitVector;
+            var ua = this.UnitVector;
             var ub = vector.UnitVector;
             var dp = ua.DotProduct(ub);
-            return RadiansToDegrees(Acos(dp));
+            return (Acos(dp)).ToDegrees();
         }
 
         public float DotProduct(Vector vector) => this.X * vector.X + this.Y * vector.Y;
@@ -66,10 +66,13 @@ namespace Collisions
             return onto.Multiply(dp / d);
         }
 
+        public Vector Clamp(Rectangle rectangle) => new Vector(this.X.Clamp(rectangle.Origin.X, rectangle.Origin.X + rectangle.Size.X),
+            this.Y.Clamp(rectangle.Origin.Y, rectangle.Origin.Y + rectangle.Size.Y));
+
         public bool CollidesWith(Vector point) => GameMath.AreEqual(this.X, point.X) &&
             GameMath.AreEqual(this.Y, point.Y);
 
-        public bool ParallelWith(Vector line) => GameMath.AreEqual(0, this.Rotate90.DotProduct(line));
+        public bool ParallelWith(Vector line) => GameMath.AreEqual(0, this.Rotated90.DotProduct(line));
 
         public bool EqualTo(Vector vector) => GameMath.AreEqual(0, this.X - vector.X) &&
             GameMath.AreEqual(0, this.Y - vector.Y);

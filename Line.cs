@@ -11,10 +11,7 @@ namespace Collisions
             Direction = direction;
         }
 
-        public override string ToString()
-        {
-            return $"{{{Base}, {Direction}}}";
-        }
+        public override string ToString() => $"{{{Base}, {Direction}}}";
 
         public bool CollidesWith(Line line)
         {
@@ -35,7 +32,7 @@ namespace Collisions
         {
             var d1 = segment.Point1.Subtract(this.Base);
             var d2 = segment.Point2.Subtract(this.Base);
-            var n = this.Direction.Rotate90;
+            var n = this.Direction.Rotated90;
             return n.DotProduct(d1) * n.DotProduct(d2) > 0;
         }
     }

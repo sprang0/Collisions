@@ -13,10 +13,7 @@ namespace Collisions
             Rotation = rotation;
         }
 
-        public override string ToString()
-        {
-            return $"{{{Center}, {HalfExtent}, {Rotation}}}";
-        }
+        public override string ToString() => $"{{{Center}, {HalfExtent}, {Rotation}}}";
 
         public LineSegment Edge(int number)
         {
@@ -35,11 +32,11 @@ namespace Collisions
                     break;
                 case 2:
                     a.Y = -a.Y;
-                    b = b.Negate;
+                    b = b.Negated;
                     break;
                 case 3:
                     b.X = -b.X;
-                    a = a.Negate;
+                    a = a.Negated;
                     break;
             }
 
@@ -51,19 +48,69 @@ namespace Collisions
             return new LineSegment(a, b);
         }
 
+        public Vector Corner(int number)
+        {
+            var c = this.HalfExtent;
+            switch (number)
+            {
+                case 0:
+                    c.X = -c.X;
+                    break;
+                case 1:
+                    break; // c = this.HalfExtent
+                case 2:
+                    c.Y = -c.Y;
+                    break;
+                case 3:
+                    c = c.Negated;
+                    break;
+            }
+
+            c = c.Rotate(this.Rotation);
+
+            return c.Add(this.Center);
+        }
+
+        public Rectangle Hull
+        {
+            get
+            {
+                var h = new Rectangle(this.Center, new Vector(0, 0));
+                for (var i = 0; i < 4; i++)
+                {
+                    h = h.Enlarge(Corner(i));
+                }
+                return h;
+            }
+        }
+
+        public bool IsSeparatingAxis(LineSegment axis)
+        {
+            var rEdge0 = this.Edge(0);
+            var rEdge2 = this.Edge(2);
+            var n = axis.Point1.Subtract(axis.Point2);
+
+            var axisRange = axis.Project(n);
+            var r0Range = rEdge0.Project(n);
+            var r2Range = rEdge2.Project(n);
+            var rProjection = r0Range.Hull(r2Range);
+
+            return !axisRange.Overlaps(rProjection);
+        }
+
         public bool CollidesWith(OrientedRectangle orientedRectangle)
         {
             var edge = this.Edge(0);
-            if (edge.IsSeparatingAxis(orientedRectangle)) return false;
+            if (orientedRectangle.IsSeparatingAxis(edge)) return false;
 
             edge = this.Edge(1);
-            if (edge.IsSeparatingAxis(orientedRectangle)) return false;
+            if (orientedRectangle.IsSeparatingAxis(edge)) return false;
 
             edge = orientedRectangle.Edge(0);
-            if (edge.IsSeparatingAxis(this)) return false;
+            if (this.IsSeparatingAxis(edge)) return false;
 
             edge = orientedRectangle.Edge(1);
-            if (edge.IsSeparatingAxis(this)) return false;
+            if (this.IsSeparatingAxis(edge)) return false;
 
             return true;
         }
