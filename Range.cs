@@ -4,6 +4,8 @@ namespace Collisions
 {
     public struct Range
     {
+        #region Range
+
         public float Minimum { get; set; }
         public float Maximum { get; set; }
 
@@ -14,6 +16,10 @@ namespace Collisions
         }
 
         public override string ToString() => $"{{{Minimum}, {Maximum}}}";
+
+        #endregion
+
+        #region Publics 
 
         public void Sort()
         {
@@ -36,5 +42,7 @@ namespace Collisions
         {
             return minB <= maxA && minA <= maxB;
         }
+
+        #endregion
     }
 }

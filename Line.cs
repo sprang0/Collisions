@@ -2,6 +2,8 @@ namespace Collisions
 {
     public struct Line
     {
+        #region Line
+
         public Vector Base { get; set; }
         public Vector Direction { get; set; }
 
@@ -13,14 +15,11 @@ namespace Collisions
 
         public override string ToString() => $"{{{Base}, {Direction}}}";
 
-        public bool CollidesWith(Line line)
-        {
-            if (this.Direction.ParallelWith(line.Direction))
-                return this.EquivalentTo(line);
-            else return true;
-        }
+        #endregion
 
-        public bool EquivalentTo(Line line)
+        #region Publics 
+
+        public bool IsEquivalentTo(Line line)
         {
             if (!this.Direction.ParallelWith(line.Direction)) return false;
 
@@ -28,12 +27,43 @@ namespace Collisions
             return d.ParallelWith(this.Direction);
         }
 
-        public bool IsOnOneSide(LineSegment segment)
+        public bool IsOnSameSideOf(LineSegment segment)
         {
             var d1 = segment.Point1.Subtract(this.Base);
             var d2 = segment.Point2.Subtract(this.Base);
             var n = this.Direction.Rotated90;
             return n.DotProduct(d1) * n.DotProduct(d2) > 0;
         }
+
+        #endregion
+
+        #region Collisions
+
+        public bool CollidesWith(Vector point)
+        {
+            if (point.CollidesWith(this.Base)) return true;
+            var lp = point.Subtract(this.Base);
+            return lp.ParallelWith(this.Direction);
+        }
+
+        public bool CollidesWith(LineSegment segment)
+        {
+            return !this.IsOnSameSideOf(segment);
+        }
+
+        public bool CollidesWith(Line line)
+        {
+            if (this.Direction.ParallelWith(line.Direction))
+                return this.IsEquivalentTo(line);
+            else return true;
+        }
+
+        public bool CollidesWith(Circle circle) => circle.CollidesWith(this);
+
+        public bool CollidesWith(Rectangle rectangle) => rectangle.CollidesWith(this);
+
+        public bool CollidesWith(OrientedRectangle orientedRectangle) => orientedRectangle.CollidesWith(this);
+
+        #endregion
     }
 }

@@ -2,6 +2,8 @@ namespace Collisions
 {
     public struct OrientedRectangle
     {
+        #region Oriented Rectangle
+
         public Vector Center { get; set; }
         public Vector HalfExtent { get; set; }
         public float Rotation { get; set; }
@@ -14,6 +16,10 @@ namespace Collisions
         }
 
         public override string ToString() => $"{{{Center}, {HalfExtent}, {Rotation}}}";
+
+        #endregion
+
+        #region Publics
 
         public LineSegment Edge(int number)
         {
@@ -98,6 +104,50 @@ namespace Collisions
             return !axisRange.Overlaps(rProjection);
         }
 
+        #endregion
+
+        #region Collisions
+
+        public bool CollidesWith(Vector point)
+        {
+            var r = new Rectangle(new Vector(0, 0), this.HalfExtent.MultiplyBy(2));
+            var p = point.Subtract(this.Center);
+            p = p.Rotate(-this.Rotation);
+            p = p.Add(this.HalfExtent);
+
+            return r.CollidesWith(p);
+        }
+
+        public bool CollidesWith(LineSegment segment)
+        {
+            var r = new Rectangle(new Vector(0, 0), this.HalfExtent.MultiplyBy(2));
+            var s = new LineSegment();
+            s.Point1 = segment.Point1.Subtract(this.Center);
+            s.Point1 = s.Point1.Rotate(-this.Rotation);
+            s.Point1 = s.Point1.Add(this.HalfExtent);
+            s.Point2 = segment.Point2.Subtract(this.Center);
+            s.Point2 = s.Point2.Rotate(-this.Rotation);
+            s.Point2 = s.Point2.Add(this.HalfExtent);
+
+            return r.CollidesWith(s);
+        }
+
+        public bool CollidesWith(Line line)
+        {
+            var r = new Rectangle(new Vector(0, 0), this.HalfExtent.MultiplyBy(2));
+            var l = new Line();
+            l.Base = line.Base.Subtract(this.Center);
+            l.Base = l.Base.Rotate(-this.Rotation);
+            l.Base = l.Base.Add(this.HalfExtent);
+            l.Direction = line.Direction.Rotate(-this.Rotation);
+
+            return r.CollidesWith(l);
+        }
+
+        public bool CollidesWith(Circle circle) => circle.CollidesWith(this);
+
+        public bool CollidesWith(Rectangle rectangle) => rectangle.CollidesWith(this);
+
         public bool CollidesWith(OrientedRectangle orientedRectangle)
         {
             var edge = this.Edge(0);
@@ -114,5 +164,7 @@ namespace Collisions
 
             return true;
         }
+
+        #endregion
     }
 }

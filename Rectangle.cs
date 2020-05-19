@@ -4,6 +4,8 @@ namespace Collisions
 {
     public struct Rectangle
     {
+        #region Rectangle
+
         public Vector Origin { get; set; }
         public Vector Size { get; set; }
 
@@ -14,6 +16,10 @@ namespace Collisions
         }
 
         public override string ToString() => $"{{{Origin}, {Size}}}";
+
+        #endregion
+
+        #region Publics
 
         public Vector Corner(int number)
         {
@@ -60,21 +66,9 @@ namespace Collisions
             return enlarged;
         }
 
-        public bool CollidesWith(Rectangle rectangle)
-        {
-            var aLeft = this.Origin.X;
-            var aRight = aLeft + this.Size.X;
-            var bLeft = rectangle.Origin.X;
-            var bRight = bLeft + rectangle.Size.X;
+        #endregion
 
-            var aBottom = this.Origin.Y;
-            var aTop = aBottom + this.Size.Y;
-            var bBottom = rectangle.Origin.Y;
-            var bTop = bBottom + rectangle.Size.Y;
-
-            return Range.Overlapping(aLeft, aRight, bLeft, bRight) &&
-                Range.Overlapping(aBottom, aTop, bBottom, bTop);
-        }
+        #region Collisions
 
         public bool CollidesWith(Vector point)
         {
@@ -127,6 +121,24 @@ namespace Collisions
             return true;
         }
 
+        public bool CollidesWith(Circle circle) => circle.CollidesWith(this);
+
+        public bool CollidesWith(Rectangle rectangle)
+        {
+            var aLeft = this.Origin.X;
+            var aRight = aLeft + this.Size.X;
+            var bLeft = rectangle.Origin.X;
+            var bRight = bLeft + rectangle.Size.X;
+
+            var aBottom = this.Origin.Y;
+            var aTop = aBottom + this.Size.Y;
+            var bBottom = rectangle.Origin.Y;
+            var bTop = bBottom + rectangle.Size.Y;
+
+            return Range.Overlapping(aLeft, aRight, bLeft, bRight) &&
+                Range.Overlapping(aBottom, aTop, bBottom, bTop);
+        }
+
         public bool CollidesWith(OrientedRectangle orientedRectangle)
         {
             var orHull = orientedRectangle.Hull;
@@ -140,5 +152,7 @@ namespace Collisions
 
             return true;
         }
+
+        #endregion
     }
 }

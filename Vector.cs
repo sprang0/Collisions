@@ -5,6 +5,7 @@ namespace Collisions
 {
     public struct Vector
     {
+        #region Vector
         public float X { get; set; }
         public float Y { get; set; }
 
@@ -16,13 +17,17 @@ namespace Collisions
 
         public override string ToString() => $"{{{X}, {Y}}}";
 
+        #endregion
+
+        #region Publics
+
         public Vector Add(Vector vector) => new Vector(this.X + vector.X, this.Y + vector.Y);
 
         public Vector Subtract(Vector vector) => new Vector(this.X - vector.X, this.Y - vector.Y);
 
-        public Vector Multiply(float scalar) => new Vector(this.X * scalar, this.Y * scalar);
+        public Vector MultiplyBy(float scalar) => new Vector(this.X * scalar, this.Y * scalar);
 
-        public Vector Divide(float divisor) => new Vector(this.X / divisor, this.Y / divisor);
+        public Vector DividedBy(float divisor) => new Vector(this.X / divisor, this.Y / divisor);
 
         public Vector Negated => new Vector(-this.X, -this.Y);
 
@@ -33,7 +38,7 @@ namespace Collisions
             get
             {
                 var length = Length;
-                return (length > 0) ? this.Divide(length) : this;
+                return (length > 0) ? this.DividedBy(length) : this;
             }
         }
 
@@ -63,10 +68,10 @@ namespace Collisions
             if (d <= 0) return onto;
 
             var dp = this.DotProduct(onto);
-            return onto.Multiply(dp / d);
+            return onto.MultiplyBy(dp / d);
         }
 
-        public Vector Clamp(Rectangle rectangle) => new Vector(this.X.Clamp(rectangle.Origin.X, rectangle.Origin.X + rectangle.Size.X),
+        public Vector ClampTo(Rectangle rectangle) => new Vector(this.X.Clamp(rectangle.Origin.X, rectangle.Origin.X + rectangle.Size.X),
             this.Y.Clamp(rectangle.Origin.Y, rectangle.Origin.Y + rectangle.Size.Y));
 
         public bool CollidesWith(Vector point) => GameMath.AreEqual(this.X, point.X) &&
@@ -77,5 +82,6 @@ namespace Collisions
         public bool EqualTo(Vector vector) => GameMath.AreEqual(0, this.X - vector.X) &&
             GameMath.AreEqual(0, this.Y - vector.Y);
 
+        #endregion
     }
 }

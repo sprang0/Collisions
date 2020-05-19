@@ -2,6 +2,8 @@ namespace Collisions
 {
     public class Circle
     {
+        #region Circle
+
         public Vector Center { get; set; }
         public float Radius { get; set; }
 
@@ -13,25 +15,14 @@ namespace Collisions
 
         public override string ToString() => $"{{{Center}, {Radius}}}";
 
-        public bool CollidesWith(Circle circle)
-        {
-            var radiusSum = this.Radius + circle.Radius;
-            var distance = this.Center.Subtract(circle.Center);
-            return distance.Length <= radiusSum;
-        }
+        #endregion
+
+        #region Collisions
 
         public bool CollidesWith(Vector point)
         {
             var distance = this.Center.Subtract(point);
             return distance.Length <= this.Radius;
-        }
-
-        public bool CollidesWith(Line line)
-        {
-            var c = this.Center.Subtract(line.Base);
-            var p = c.Project(line.Direction);
-            var nearest = line.Base.Add(p);
-            return CollidesWith(nearest);
         }
 
         public bool CollidesWith(LineSegment segment)
@@ -44,25 +35,40 @@ namespace Collisions
             var p = c.Project(d);
             var nearest = segment.Point1.Add(p);
 
-            return this.CollidesWith(nearest) &&
-                p.Length <= d.Length &&
-                p.DotProduct(d) >= 0;
+            return this.CollidesWith(nearest) && p.Length <= d.Length && p.DotProduct(d) >= 0;
+        }
+
+        public bool CollidesWith(Line line)
+        {
+            var c = this.Center.Subtract(line.Base);
+            var p = c.Project(line.Direction);
+            var nearest = line.Base.Add(p);
+            return CollidesWith(nearest);
+        }
+
+        public bool CollidesWith(Circle circle)
+        {
+            var radiusSum = this.Radius + circle.Radius;
+            var distance = this.Center.Subtract(circle.Center);
+            return distance.Length <= radiusSum;
         }
 
         public bool CollidesWith(Rectangle rectangle)
         {
-            var clamped = this.Center.Clamp(rectangle);
+            var clamped = this.Center.ClampTo(rectangle);
             return this.CollidesWith(clamped);
         }
 
         public bool CollidesWith(OrientedRectangle orientedRectangle)
         {
-            var r = new Rectangle(new Vector(0, 0), orientedRectangle.HalfExtent.Multiply(2));
+            var r = new Rectangle(new Vector(0, 0), orientedRectangle.HalfExtent.MultiplyBy(2));
             var c = new Circle(new Vector(0, 0), this.Radius);
             var distance = this.Center.Subtract(orientedRectangle.Center);
             c.Center = distance.Add(orientedRectangle.HalfExtent);
 
             return c.CollidesWith(r);
         }
+
+        #endregion
     }
 }

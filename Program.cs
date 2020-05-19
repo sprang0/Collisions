@@ -145,7 +145,50 @@ namespace Collisions
             Assert(!ra.CollidesWith(oa));
             ra = new Rectangle(new Vector(1, 5), new Vector(7, 3));
             Assert(ra.CollidesWith(oa));
-            System.Console.WriteLine("Rectangles colliding with line oriented rectangles");
+            System.Console.WriteLine("Rectangles colliding with oriented rectangles");
+
+            pa = new Vector(5, 3);
+            la = new Line(new Vector(3, 7), new Vector(7, -2));
+            Assert(!la.CollidesWith(pa));
+            pa = new Vector(10, 5);
+            Assert(la.CollidesWith(pa));
+            System.Console.WriteLine("Lines colliding with points");
+
+            pa = new Vector(1, 4);
+            sa = new LineSegment(new Vector(6, 6), new Vector(13, 4));
+            Assert(!sa.CollidesWith(pa));
+            pa = new Vector(9.5f, 5);
+            Assert(sa.CollidesWith(pa));
+            System.Console.WriteLine("Line segments colliding with points");
+
+            oa = new OrientedRectangle(new Vector(5, 4), new Vector(3, 2), 30);
+            va = new Vector(6, 5);
+            vb = new Vector(10, 6);
+            Assert(oa.CollidesWith(va));
+            Assert(!oa.CollidesWith(vb));
+            System.Console.WriteLine("Oriented rectangles collding with points");
+
+            sa = new LineSegment(new Vector(8, 4), new Vector(11, 7));
+            la = new Line(new Vector(3, 4), new Vector(4, -2));
+            Assert(!la.CollidesWith(sa));
+            sa = new LineSegment(new Vector(5, 1), new Vector(11, 7));
+            Assert(la.CollidesWith(sa));
+            System.Console.WriteLine("Lines colliding with line segments");
+
+            la = new Line(new Vector(7, 3), new Vector(2, -1));
+            oa = new OrientedRectangle(new Vector(5, 4), new Vector(3, 2), 30);
+            Assert(oa.CollidesWith(la));
+            la = new Line(new Vector(7, 10), new Vector(2, -1));
+            Assert(!oa.CollidesWith(la));
+            System.Console.WriteLine("Oriented rectangles colliding with lines");
+
+            sa = new LineSegment(new Vector(1, 8), new Vector(7, 5));
+            oa = new OrientedRectangle(new Vector(5, 4), new Vector(3, 2), 30);
+            Assert(oa.CollidesWith(sa));
+            oa = new OrientedRectangle(new Vector(5, 4), new Vector(.2f, 2), 30);
+            Assert(!oa.CollidesWith(sa));
+            System.Console.WriteLine("Oriented rectangles colliding with line segments");
+
         }
 
         private static void TestShapes()
@@ -194,16 +237,16 @@ namespace Collisions
             GameMath.AssertEqual(c, a.Subtract(b));
 
             a = new Vector(6, 3);
-            b = a.Multiply(2);
+            b = a.MultiplyBy(2);
             GameMath.AssertEqual(b, new Vector(12, 6));
 
             a = new Vector(8, 4);
-            b = a.Divide(2);
+            b = a.DividedBy(2);
             GameMath.AssertEqual(b, new Vector(4, 2));
 
             float divisor = 2;
-            b = a.Divide(divisor);
-            c = a.Multiply(1 / divisor);
+            b = a.DividedBy(divisor);
+            c = a.MultiplyBy(1 / divisor);
             GameMath.AssertEqual(b, c);
 
             var v = new Vector(10, 5);
