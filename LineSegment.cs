@@ -36,7 +36,7 @@ namespace Collisions
             var d = this.Point2.Subtract(this.Point1);
             var p = point.Subtract(this.Point1);
             var pr = p.Project(d);
-            return p.EqualTo(pr) && pr.Length <= d.Length && pr.DotProductWith(d) >= 0;
+            return p.Equals(pr) && pr.Length <= d.Length && pr.DotProductWith(d) >= 0;
         }
 
         public bool CollidesWith(LineSegment lineSegment)

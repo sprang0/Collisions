@@ -21,7 +21,7 @@ namespace Collisions
 
         public static void AssertEqual(float a, float b)
         {
-            Assert(a.IsEqualTo(b));
+            Assert(a.Equal(b));
             WriteLine($"Assert passed {a}=~{b}");
         }
 

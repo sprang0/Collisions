@@ -7,19 +7,19 @@ namespace Collisions
     {
         const float FloatEqualityThreshold = 1f / 8192f;
 
-        public static bool IsEqualTo(this float x, float y)
+        public static bool Equal(this float a, float b)
         {
-            return Math.Abs(x - y) < FloatEqualityThreshold;
+            return Math.Abs(a - b) < FloatEqualityThreshold;
         }
 
-        public static float OrGreater(this float x, float y)
+        public static float OrGreater(this float x, float f)
         {
-            return y > x ? y : x;
+            return f > x ? f : x;
         }
 
-        public static float OrLesser(this float x, float y)
+        public static float OrLesser(this float x, float f)
         {
-            return y < x ? y : x;
+            return f < x ? f : x;
         }
 
         public static float ToRadians(this float degrees)
@@ -32,12 +32,12 @@ namespace Collisions
             return radians * 180 / PI;
         }
 
-        public static float Clamp(this float x, Range range)
+        public static float ClampTo(this float x, Range range)
         {
-            return x.Clamp(range.Minimum, range.Maximum);
+            return x.ClampTo(range.Minimum, range.Maximum);
         }
 
-        public static float Clamp(this float x, float rangeMin, float rangeMax)
+        public static float ClampTo(this float x, float rangeMin, float rangeMax)
         {
             if (x < rangeMin) return rangeMin;
             if (rangeMax < x) return rangeMax;

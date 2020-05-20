@@ -21,17 +21,7 @@ namespace Collisions
 
         #region Equals
 
-        public override bool Equals(object obj)
-        {
-            if (obj != null && obj is Vector v)
-                return this.X == v.X && this.Y == v.Y;
-            return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (int) this.X ^ (int) this.Y;
-        }
+        public bool Equals(Vector v) => this.X.Equal(v.X) && this.Y.Equal(v.Y);
 
         #endregion
 
@@ -88,14 +78,12 @@ namespace Collisions
         }
 
         public Vector ClampTo(Rectangle rectangle) =>
-            new Vector(this.X.Clamp(rectangle.Origin.X, rectangle.Origin.X + rectangle.Size.X),
-                this.Y.Clamp(rectangle.Origin.Y, rectangle.Origin.Y + rectangle.Size.Y));
+            new Vector(this.X.ClampTo(rectangle.Origin.X, rectangle.Origin.X + rectangle.Size.X),
+                this.Y.ClampTo(rectangle.Origin.Y, rectangle.Origin.Y + rectangle.Size.Y));
 
         public bool CollidesWith(Vector point) => this.X.Equals(point.X) && this.Y.Equals(point.Y);
 
         public bool ParallelWith(Vector line) => this.Rotated90.DotProductWith(line).Equals(0);
-
-        public bool EqualTo(Vector vector) => (this.X - vector.X).Equals(0) && (this.Y - vector.Y).Equals(0);
 
         #endregion
     }

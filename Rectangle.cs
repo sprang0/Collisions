@@ -1,5 +1,3 @@
-using static Collisions.GameMath;
-
 namespace Collisions
 {
     public struct Rectangle
@@ -15,30 +13,16 @@ namespace Collisions
             Size = size;
         }
 
+        public bool Equals(Rectangle rectangle) =>
+            this.Origin.Equals(rectangle.Origin) && this.Size.Equals(rectangle.Size);
+
         public override string ToString() => $"Rectangle {{{Origin}, {Size}}}";
-
-        #endregion
-
-        #region Equals
-
-        public override bool Equals(object obj)
-        {
-            if (obj != null && obj is Rectangle r)
-                return this.Origin.Equals(r.Origin) && this.Size.EqualTo(r.Size);
-
-            return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (int) Origin.X ^ (int) Origin.Y ^ (int) Size.X ^ (int) Size.Y;
-        }
 
         #endregion
 
         #region Operations
 
-        public Vector Corner(int number)
+        public Vector GetCorner(int number)
         {
             var corner = this.Origin;
             switch (number)
@@ -58,11 +42,17 @@ namespace Collisions
             return corner;
         }
 
+        public Vector GetCenter()
+        {
+            var halfSize = this.Size.DividedBy(2);
+            return this.Origin.Add(halfSize);
+        }
+
         public bool IsSeparatingAxis(LineSegment axis)
         {
             var n = axis.Point1.Subtract(axis.Point2);
-            var rEdgeA = new LineSegment(this.Corner(0), this.Corner(1));
-            var rEdgeB = new LineSegment(this.Corner(2), this.Corner(3));
+            var rEdgeA = new LineSegment(this.GetCorner(0), this.GetCorner(1));
+            var rEdgeB = new LineSegment(this.GetCorner(2), this.GetCorner(3));
             var rEdgeARange = rEdgeA.Project(n);
             var rEdgeBRange = rEdgeB.Project(n);
             var rProjection = rEdgeARange.Hull(rEdgeBRange);

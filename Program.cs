@@ -31,10 +31,22 @@ namespace Collisions
             var r4 = new Rectangle(new Vector(5, 10), new Vector(2, 3));
             var rh = r1.GetHullWith(new [] { r2, r3, r4 });
             Assert(rh.Equals(new Rectangle(new Vector(1, 0), new Vector(12, 13))));
+            System.Console.WriteLine("Rectangle hull for rectangles");
 
             var c1 = new Circle(new Vector(5, 5), 5);
             rh = c1.GetRectangleHull();
             Assert(rh.Equals(new Rectangle(new Vector(0, 0), new Vector(10, 10))));
+            System.Console.WriteLine("Rectangle hull for circle");
+
+            c1 = new Circle(new Vector(5.5f, 4.5f), 2.5f);
+            var c2 = new Circle(new Vector(5, 10), 2);
+            var c3 = new Circle(new Vector(8.5f, 8.5f), 3.5f);
+            rh = c1.GetRectangleHullWith(new [] { c2, c3 });
+            Assert(rh.Equals(new Rectangle(new Vector(3, 2), new Vector(9, 10))));
+            System.Console.WriteLine("Rectangle hull for circles");
+            var ch = c3.GetCircleHullWith(new [] { c2, c1 });
+            Assert(ch.Equals(new Circle(new Vector(7.5f, 7), 5.9051247f)));
+            System.Console.WriteLine("Circle hull for circles");
         }
 
         private static void TestCollisions()

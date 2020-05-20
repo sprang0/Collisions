@@ -13,11 +13,33 @@ namespace Collisions
             Radius = radius;
         }
 
+        public bool Equals(Circle circle) => this.Center.Equals(circle.Center) && this.Radius.Equal(circle.Radius);
+
         public override string ToString() => $"Circle {{{Center}, {Radius}}}";
 
         #endregion
 
         #region Operations
+
+        public Circle GetCircleHullWith(Circle[] otherCircles)
+        {
+            var h = new Circle(this.Center, this.Radius);
+
+            if (otherCircles == null || otherCircles.Length == 0) return h;
+
+            var rh = this.GetRectangleHullWith(otherCircles);
+            h.Center = rh.GetCenter();
+
+            for (int i = 0; i < otherCircles.Length; i++)
+            {
+                var c = otherCircles[i];
+                var d = c.Center.Subtract(h.Center);
+                var extension = d.Length + c.Radius;
+                h.Radius = extension.OrGreater(h.Radius);
+            }
+
+            return h;
+        }
 
         public Rectangle GetRectangleHullWith(Circle[] otherCircles)
         {
@@ -28,11 +50,11 @@ namespace Collisions
             Vector halfExtent = new Vector(), minP, maxP;
             for (int i = 0; i < otherCircles.Length; i++)
             {
-                var circle = otherCircles[i];
-                halfExtent.X = circle.Radius;
-                halfExtent.Y = circle.Radius;
-                minP = circle.Center.Subtract(halfExtent);
-                maxP = circle.Center.Add(halfExtent);
+                var c = otherCircles[i];
+                halfExtent.X = c.Radius;
+                halfExtent.Y = c.Radius;
+                minP = c.Center.Subtract(halfExtent);
+                maxP = c.Center.Add(halfExtent);
                 h = h.EnlargeBy(minP).EnlargeBy(maxP);
             }
 
