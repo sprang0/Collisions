@@ -15,11 +15,28 @@ namespace Collisions
             Size = size;
         }
 
-        public override string ToString() => $"{{{Origin}, {Size}}}";
+        public override string ToString() => $"Rectangle {{{Origin}, {Size}}}";
 
         #endregion
 
-        #region Publics
+        #region Equals
+
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is Rectangle r)
+                return this.Origin.Equals(r.Origin) && this.Size.EqualTo(r.Size);
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (int) Origin.X ^ (int) Origin.Y ^ (int) Size.X ^ (int) Size.Y;
+        }
+
+        #endregion
+
+        #region Operations
 
         public Vector Corner(int number)
         {
@@ -55,7 +72,7 @@ namespace Collisions
             return !axisRange.Overlaps(rProjection);
         }
 
-        public Rectangle Enlarge(Vector point)
+        public Rectangle EnlargeBy(Vector point)
         {
             var enlarged = new Rectangle(
                 new Vector(this.Origin.X.OrLesser(point.X),
@@ -64,6 +81,24 @@ namespace Collisions
                     (point.Y.OrGreater(this.Origin.Y + this.Size.Y))));
             enlarged.Size = enlarged.Size.Subtract(enlarged.Origin);
             return enlarged;
+        }
+
+        public Rectangle EnlargeBy(Rectangle extent)
+        {
+            var maxCorner = extent.Origin.Add(extent.Size);
+            var enlarged = this.EnlargeBy(maxCorner);
+            return enlarged.EnlargeBy(extent.Origin);
+        }
+
+        public Rectangle GetHullWith(Rectangle[] otherRectangles)
+        {
+            var h = new Rectangle(this.Origin, this.Size);
+            if (otherRectangles == null || otherRectangles.Length == 0) return h;
+
+            for (int i = 0; i < otherRectangles.Length; i++)
+                h = h.EnlargeBy(otherRectangles[i]);
+
+            return h;
         }
 
         #endregion
@@ -93,28 +128,28 @@ namespace Collisions
             c3 = c3.Subtract(line.Base);
             c4 = c4.Subtract(line.Base);
 
-            var dp1 = n.DotProduct(c1);
-            var dp2 = n.DotProduct(c2);
-            var dp3 = n.DotProduct(c3);
-            var dp4 = n.DotProduct(c4);
+            var dp1 = n.DotProductWith(c1);
+            var dp2 = n.DotProductWith(c2);
+            var dp3 = n.DotProductWith(c3);
+            var dp4 = n.DotProductWith(c4);
 
             return dp1 * dp2 <= 0 || dp2 * dp3 <= 0 || dp3 * dp4 <= 0;
         }
 
-        public bool CollidesWith(LineSegment segment)
+        public bool CollidesWith(LineSegment lineSegment)
         {
-            var sLine = new Line(segment.Point1, segment.Point2.Subtract(segment.Point1));
+            var sLine = new Line(lineSegment.Point1, lineSegment.Point2.Subtract(lineSegment.Point1));
             if (!CollidesWith(sLine)) return false;
 
             var rRange = new Range(this.Origin.X, this.Origin.X + this.Size.X);
-            var sRange = new Range(segment.Point1.X, segment.Point2.X);
+            var sRange = new Range(lineSegment.Point1.X, lineSegment.Point2.X);
             sRange.Sort();
             if (!rRange.Overlaps(sRange)) return false;
 
             rRange.Minimum = this.Origin.Y;
             rRange.Maximum = this.Origin.Y + this.Size.Y;
-            sRange.Minimum = segment.Point1.Y;
-            sRange.Maximum = segment.Point2.Y;
+            sRange.Minimum = lineSegment.Point1.Y;
+            sRange.Maximum = lineSegment.Point2.Y;
             sRange.Sort();
             if (!rRange.Overlaps(sRange)) return false;
 
@@ -141,7 +176,7 @@ namespace Collisions
 
         public bool CollidesWith(OrientedRectangle orientedRectangle)
         {
-            var orHull = orientedRectangle.Hull;
+            var orHull = orientedRectangle.GetRectangleHull();
             if (!orHull.CollidesWith(this)) return false;
 
             var edge = orientedRectangle.Edge(0);

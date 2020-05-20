@@ -19,7 +19,7 @@ namespace Collisions
 
         #endregion
 
-        #region Publics 
+        #region Operations 
 
         public void Sort()
         {

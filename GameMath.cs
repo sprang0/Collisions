@@ -19,16 +19,10 @@ namespace Collisions
             WriteLine($"Assert passed {a}=~{b}");
         }
 
-        const float FloatEqualityThreshold = 1f / 8192f;
         public static void AssertEqual(float a, float b)
         {
-            Assert(AreEqual(a, b));
+            Assert(a.IsEqualTo(b));
             WriteLine($"Assert passed {a}=~{b}");
-        }
-
-        public static bool AreEqual(float a, float b)
-        {
-            return Math.Abs(a - b) < FloatEqualityThreshold;
         }
 
         #endregion

@@ -13,11 +13,11 @@ namespace Collisions
             Direction = direction;
         }
 
-        public override string ToString() => $"{{{Base}, {Direction}}}";
+        public override string ToString() => $"Line {{{Base}, {Direction}}}";
 
         #endregion
 
-        #region Publics 
+        #region Operations 
 
         public bool IsEquivalentTo(Line line)
         {
@@ -32,7 +32,7 @@ namespace Collisions
             var d1 = segment.Point1.Subtract(this.Base);
             var d2 = segment.Point2.Subtract(this.Base);
             var n = this.Direction.Rotated90;
-            return n.DotProduct(d1) * n.DotProduct(d2) > 0;
+            return n.DotProductWith(d1) * n.DotProductWith(d2) > 0;
         }
 
         #endregion
@@ -46,9 +46,9 @@ namespace Collisions
             return lp.ParallelWith(this.Direction);
         }
 
-        public bool CollidesWith(LineSegment segment)
+        public bool CollidesWith(LineSegment lineSegment)
         {
-            return !this.IsOnSameSideOf(segment);
+            return !this.IsOnSameSideOf(lineSegment);
         }
 
         public bool CollidesWith(Line line)

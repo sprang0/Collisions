@@ -1,9 +1,17 @@
+using System;
 using static Collisions.GameMath;
 
 namespace Collisions
 {
     public static class Extensions
     {
+        const float FloatEqualityThreshold = 1f / 8192f;
+
+        public static bool IsEqualTo(this float x, float y)
+        {
+            return Math.Abs(x - y) < FloatEqualityThreshold;
+        }
+
         public static float OrGreater(this float x, float y)
         {
             return y > x ? y : x;

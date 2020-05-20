@@ -19,6 +19,22 @@ namespace Collisions
             TestShapes();
 
             TestCollisions();
+
+            TestHulls();
+        }
+
+        private static void TestHulls()
+        {
+            var r1 = new Rectangle(new Vector(2, 0), new Vector(11, 8));
+            var r2 = new Rectangle(new Vector(1, 4), new Vector(3, 6));
+            var r3 = new Rectangle(new Vector(3, 7), new Vector(3, 5));
+            var r4 = new Rectangle(new Vector(5, 10), new Vector(2, 3));
+            var rh = r1.GetHullWith(new [] { r2, r3, r4 });
+            Assert(rh.Equals(new Rectangle(new Vector(1, 0), new Vector(12, 13))));
+
+            var c1 = new Circle(new Vector(5, 5), 5);
+            rh = c1.GetRectangleHull();
+            Assert(rh.Equals(new Rectangle(new Vector(0, 0), new Vector(10, 10))));
         }
 
         private static void TestCollisions()
@@ -270,14 +286,14 @@ namespace Collisions
             a = new Vector(8, 2);
             b = new Vector(-2, 8);
             c = new Vector(-5, 5);
-            GameMath.AssertEqual(0, a.DotProduct(b));
-            Assert(a.DotProduct(c) < 0);
-            Assert(b.DotProduct(c) > 0);
+            GameMath.AssertEqual(0, a.DotProductWith(b));
+            Assert(a.DotProductWith(c) < 0);
+            Assert(b.DotProductWith(c) > 0);
 
             a = new Vector(8, 2);
             b = new Vector(-2, 8);
             GameMath.AssertEqual(90, a.EnclosedAngle(b));
-            GameMath.AssertEqual(0, a.DotProduct(b));
+            GameMath.AssertEqual(0, a.DotProductWith(b));
 
             a = new Vector(12, 5);
             b = new Vector(5, 6);

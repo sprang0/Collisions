@@ -15,11 +15,11 @@ namespace Collisions
             Rotation = rotation;
         }
 
-        public override string ToString() => $"{{{Center}, {HalfExtent}, {Rotation}}}";
+        public override string ToString() => $"Oriented Rectangle {{{Center}, {HalfExtent}, {Rotation}}}";
 
         #endregion
 
-        #region Publics
+        #region Operations
 
         public LineSegment Edge(int number)
         {
@@ -77,18 +77,17 @@ namespace Collisions
             return c.Add(this.Center);
         }
 
-        public Rectangle Hull
+        public Rectangle GetRectangleHull()
         {
-            get
+            var h = new Rectangle(this.Center, new Vector(0, 0));
+            for (var i = 0; i < 4; i++)
             {
-                var h = new Rectangle(this.Center, new Vector(0, 0));
-                for (var i = 0; i < 4; i++)
-                {
-                    h = h.Enlarge(Corner(i));
-                }
-                return h;
+                h = h.EnlargeBy(Corner(i));
             }
+            return h;
         }
+
+        public Circle GetCircleHull() => new Circle(this.Center, this.HalfExtent.Length);
 
         public bool IsSeparatingAxis(LineSegment axis)
         {
@@ -118,14 +117,14 @@ namespace Collisions
             return r.CollidesWith(p);
         }
 
-        public bool CollidesWith(LineSegment segment)
+        public bool CollidesWith(LineSegment lineSegment)
         {
             var r = new Rectangle(new Vector(0, 0), this.HalfExtent.MultiplyBy(2));
             var s = new LineSegment();
-            s.Point1 = segment.Point1.Subtract(this.Center);
+            s.Point1 = lineSegment.Point1.Subtract(this.Center);
             s.Point1 = s.Point1.Rotate(-this.Rotation);
             s.Point1 = s.Point1.Add(this.HalfExtent);
-            s.Point2 = segment.Point2.Subtract(this.Center);
+            s.Point2 = lineSegment.Point2.Subtract(this.Center);
             s.Point2 = s.Point2.Rotate(-this.Rotation);
             s.Point2 = s.Point2.Add(this.HalfExtent);
 

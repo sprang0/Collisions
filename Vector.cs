@@ -15,11 +15,27 @@ namespace Collisions
             this.Y = y;
         }
 
-        public override string ToString() => $"{{{X}, {Y}}}";
+        public override string ToString() => $"Vector {{{X}, {Y}}}";
 
         #endregion
 
-        #region Publics
+        #region Equals
+
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is Vector v)
+                return this.X == v.X && this.Y == v.Y;
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (int) this.X ^ (int) this.Y;
+        }
+
+        #endregion
+
+        #region Operations
 
         public Vector Add(Vector vector) => new Vector(this.X + vector.X, this.Y + vector.Y);
 
@@ -56,31 +72,30 @@ namespace Collisions
         {
             var ua = this.UnitVector;
             var ub = vector.UnitVector;
-            var dp = ua.DotProduct(ub);
+            var dp = ua.DotProductWith(ub);
             return (Acos(dp)).ToDegrees();
         }
 
-        public float DotProduct(Vector vector) => this.X * vector.X + this.Y * vector.Y;
+        public float DotProductWith(Vector vector) => this.X * vector.X + this.Y * vector.Y;
 
         public Vector Project(Vector onto)
         {
-            var d = onto.DotProduct(onto);
+            var d = onto.DotProductWith(onto);
             if (d <= 0) return onto;
 
-            var dp = this.DotProduct(onto);
+            var dp = this.DotProductWith(onto);
             return onto.MultiplyBy(dp / d);
         }
 
-        public Vector ClampTo(Rectangle rectangle) => new Vector(this.X.Clamp(rectangle.Origin.X, rectangle.Origin.X + rectangle.Size.X),
-            this.Y.Clamp(rectangle.Origin.Y, rectangle.Origin.Y + rectangle.Size.Y));
+        public Vector ClampTo(Rectangle rectangle) =>
+            new Vector(this.X.Clamp(rectangle.Origin.X, rectangle.Origin.X + rectangle.Size.X),
+                this.Y.Clamp(rectangle.Origin.Y, rectangle.Origin.Y + rectangle.Size.Y));
 
-        public bool CollidesWith(Vector point) => GameMath.AreEqual(this.X, point.X) &&
-            GameMath.AreEqual(this.Y, point.Y);
+        public bool CollidesWith(Vector point) => this.X.Equals(point.X) && this.Y.Equals(point.Y);
 
-        public bool ParallelWith(Vector line) => GameMath.AreEqual(0, this.Rotated90.DotProduct(line));
+        public bool ParallelWith(Vector line) => this.Rotated90.DotProductWith(line).Equals(0);
 
-        public bool EqualTo(Vector vector) => GameMath.AreEqual(0, this.X - vector.X) &&
-            GameMath.AreEqual(0, this.Y - vector.Y);
+        public bool EqualTo(Vector vector) => (this.X - vector.X).Equals(0) && (this.Y - vector.Y).Equals(0);
 
         #endregion
     }

@@ -13,7 +13,40 @@ namespace Collisions
             Radius = radius;
         }
 
-        public override string ToString() => $"{{{Center}, {Radius}}}";
+        public override string ToString() => $"Circle {{{Center}, {Radius}}}";
+
+        #endregion
+
+        #region Operations
+
+        public Rectangle GetRectangleHullWith(Circle[] otherCircles)
+        {
+            var h = GetRectangleHull();
+
+            if (otherCircles == null || otherCircles.Length == 0) return h;
+
+            Vector halfExtent = new Vector(), minP, maxP;
+            for (int i = 0; i < otherCircles.Length; i++)
+            {
+                var circle = otherCircles[i];
+                halfExtent.X = circle.Radius;
+                halfExtent.Y = circle.Radius;
+                minP = circle.Center.Subtract(halfExtent);
+                maxP = circle.Center.Add(halfExtent);
+                h = h.EnlargeBy(minP).EnlargeBy(maxP);
+            }
+
+            return h;
+        }
+
+        public Rectangle GetRectangleHull()
+        {
+            var h = new Rectangle(this.Center, new Vector(0, 0));
+            var halfExtent = new Vector(this.Radius, this.Radius);
+            var minP = this.Center.Subtract(halfExtent);
+            var maxP = this.Center.Add(halfExtent);
+            return h.EnlargeBy(minP).EnlargeBy(maxP);
+        }
 
         #endregion
 
@@ -25,17 +58,17 @@ namespace Collisions
             return distance.Length <= this.Radius;
         }
 
-        public bool CollidesWith(LineSegment segment)
+        public bool CollidesWith(LineSegment lineSegment)
         {
-            if (this.CollidesWith(segment.Point1)) return true;
-            if (this.CollidesWith(segment.Point2)) return true;
+            if (this.CollidesWith(lineSegment.Point1)) return true;
+            if (this.CollidesWith(lineSegment.Point2)) return true;
 
-            var d = segment.Point2.Subtract(segment.Point1);
-            var c = this.Center.Subtract(segment.Point1);
+            var d = lineSegment.Point2.Subtract(lineSegment.Point1);
+            var c = this.Center.Subtract(lineSegment.Point1);
             var p = c.Project(d);
-            var nearest = segment.Point1.Add(p);
+            var nearest = lineSegment.Point1.Add(p);
 
-            return this.CollidesWith(nearest) && p.Length <= d.Length && p.DotProduct(d) >= 0;
+            return this.CollidesWith(nearest) && p.Length <= d.Length && p.DotProductWith(d) >= 0;
         }
 
         public bool CollidesWith(Line line)
