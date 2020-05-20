@@ -21,6 +21,18 @@ namespace Collisions
             TestCollisions();
 
             TestHulls();
+
+            TestMovingCollisions();
+        }
+
+        private static void TestMovingCollisions()
+        {
+            var ball = new Circle(new Vector(39, 32), 6);
+            var wall = new Rectangle(new Vector(123, 35), new Vector(1, 15));
+            Assert(!ball.CollidesWith(wall, new Vector(70, 0)));
+            Assert(ball.CollidesWith(wall, new Vector(100, 0)));
+            Assert(ball.CollidesWith(wall, new Vector(120, -3)));
+            System.Console.WriteLine("Balls hitting wall");
         }
 
         private static void TestHulls()

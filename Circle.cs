@@ -125,5 +125,41 @@ namespace Collisions
         }
 
         #endregion
+
+        #region Moving Collisions
+
+        const float Epsilon = 1f / 32f;
+
+        public bool CollidesWith(Rectangle rectangle, Vector speed)
+        {
+            var envelope = new Circle(this.Center, this.Radius);
+            var halfSpeed = speed.DividedBy(2);
+            var moveDistance = speed.Length;
+            envelope.Center = this.Center.Add(halfSpeed);
+            envelope.Radius = this.Radius + moveDistance / 2;
+
+            if (envelope.CollidesWith(rectangle))
+            {
+                var minMoveDistance = (this.Radius / 4).OrGreater(Epsilon);
+                if (moveDistance < minMoveDistance)
+                    return true;
+
+                envelope.Radius = this.Radius;
+
+                return this.CollidesWith(rectangle, halfSpeed) ||
+                    envelope.CollidesWith(rectangle, halfSpeed);
+            }
+            else
+                return false;
+        }
+
+        public bool CollidesWith(Circle circle, Vector speed)
+        {
+            var absorbed = new Circle(circle.Center, this.Radius + circle.Radius);
+            var travel = new LineSegment(this.Center, this.Center.Add(speed));
+            return absorbed.CollidesWith(travel);
+        }
+
+        #endregion
     }
 }
