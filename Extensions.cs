@@ -1,11 +1,15 @@
 using System;
-using static Collisions.GameMath;
 
-namespace Collisions
+namespace BadKittyGames.Collisions
 {
     public static class Extensions
     {
+        static float PI => (float) Math.PI;
         const float FloatEqualityThreshold = 1f / 8192f;
+
+        public static float Sin(this float x) => (float) Math.Sin(x);
+        public static float Cos(this float x) => (float) Math.Cos(x);
+        public static float Acos(this float x) => (float) Math.Acos(x);
 
         public static bool Equal(this float a, float b)
         {

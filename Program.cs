@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using static System.Diagnostics.Debug;
 
-namespace Collisions
+namespace BadKittyGames.Collisions
 {
     class Program
     {
@@ -287,37 +286,37 @@ namespace Collisions
             var a = new Vector(3, 5);
             var b = new Vector(8, 2);
             var c = a.Add(b);
-            GameMath.AssertEqual(c, new Vector(11, 7));
+            Asserts.AssertEqual(c, new Vector(11, 7));
 
             a = new Vector(7, 4);
             b = new Vector(3, -3);
             c = a.Subtract(b);
-            GameMath.AssertEqual(c, new Vector(4, 7));
+            Asserts.AssertEqual(c, new Vector(4, 7));
 
             c = a.Add(b.Negated);
-            GameMath.AssertEqual(c, a.Subtract(b));
+            Asserts.AssertEqual(c, a.Subtract(b));
 
             a = new Vector(6, 3);
             b = a.MultiplyBy(2);
-            GameMath.AssertEqual(b, new Vector(12, 6));
+            Asserts.AssertEqual(b, new Vector(12, 6));
 
             a = new Vector(8, 4);
             b = a.DividedBy(2);
-            GameMath.AssertEqual(b, new Vector(4, 2));
+            Asserts.AssertEqual(b, new Vector(4, 2));
 
             float divisor = 2;
             b = a.DividedBy(divisor);
             c = a.MultiplyBy(1 / divisor);
-            GameMath.AssertEqual(b, c);
+            Asserts.AssertEqual(b, c);
 
             var v = new Vector(10, 5);
             var f = v.Length;
-            GameMath.AssertEqual(11.18033f, f);
+            Asserts.AssertEqual(11.18033f, f);
 
             a = new Vector(10, 5);
             Assert(1 < a.Length);
             var u = a.UnitVector;
-            GameMath.AssertEqual(1, u.Length);
+            Asserts.AssertEqual(1, u.Length);
 
             a = new Vector(12, 3);
             b = a.Rotate(50);
@@ -326,24 +325,24 @@ namespace Collisions
             float degrees = 19;
             var v1 = a.Rotate(degrees);
             var v2 = a.Rotate(degrees + 360);
-            GameMath.AssertEqual(v1, v2);
+            Asserts.AssertEqual(v1, v2);
 
             a = new Vector(8, 2);
             b = new Vector(-2, 8);
             c = new Vector(-5, 5);
-            GameMath.AssertEqual(0, a.DotProduct(b));
+            Asserts.AssertEqual(0, a.DotProduct(b));
             Assert(a.DotProduct(c) < 0);
             Assert(b.DotProduct(c) > 0);
 
             a = new Vector(8, 2);
             b = new Vector(-2, 8);
-            GameMath.AssertEqual(90, a.EnclosedAngle(b));
-            GameMath.AssertEqual(0, a.DotProduct(b));
+            Asserts.AssertEqual(90, a.EnclosedAngle(b));
+            Asserts.AssertEqual(0, a.DotProduct(b));
 
             a = new Vector(12, 5);
             b = new Vector(5, 6);
             var p = b.Project(a);
-            GameMath.AssertEqual(new Vector(6.3905325f, 2.6627219f), p);
+            Asserts.AssertEqual(new Vector(6.3905325f, 2.6627219f), p);
         }
     }
 }

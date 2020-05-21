@@ -1,6 +1,4 @@
-using static Collisions.GameMath;
-
-namespace Collisions
+namespace BadKittyGames.Collisions
 {
     public struct Range
     {

@@ -1,4 +1,4 @@
-namespace Collisions
+namespace BadKittyGames.Collisions
 {
     public class Rectangle
     {

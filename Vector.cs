@@ -1,7 +1,6 @@
 using System;
-using static Collisions.GameMath;
 
-namespace Collisions
+namespace BadKittyGames.Collisions
 {
     public struct Vector
     {
@@ -58,8 +57,8 @@ namespace Collisions
         public Vector Rotate(float degrees)
         {
             var radians = degrees.ToRadians();
-            var sin = Sin(radians);
-            var cos = Cos(radians);
+            var sin = radians.Sin();
+            var cos = radians.Cos();
             return new Vector(this.X * cos - this.Y * sin, this.X * sin + this.Y * cos);
         }
 
@@ -68,7 +67,7 @@ namespace Collisions
             var ua = this.UnitVector;
             var ub = vector.UnitVector;
             var dp = ua.DotProduct(ub);
-            return (Acos(dp)).ToDegrees();
+            return dp.Acos().ToDegrees();
         }
 
         public Vector Project(Vector onto)
