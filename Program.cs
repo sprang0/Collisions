@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using static System.Diagnostics.Debug;
 
 namespace Collisions
@@ -27,12 +28,32 @@ namespace Collisions
 
         private static void TestMovingCollisions()
         {
-            var ball = new Circle(new Vector(39, 32), 6);
-            var wall = new Rectangle(new Vector(123, 35), new Vector(1, 15));
+            var ball = new Circle(new Vector(39, 23), 6);
+            var wall = new Rectangle(new Vector(123, 21), new Vector(1, 15));
             Assert(!ball.CollidesWith(wall, new Vector(70, 0)));
-            Assert(ball.CollidesWith(wall, new Vector(100, 0)));
-            Assert(ball.CollidesWith(wall, new Vector(120, -3)));
-            System.Console.WriteLine("Balls hitting wall");
+            Assert(ball.CollidesWith(wall, new Vector(80, 0)));
+            Assert(ball.CollidesWith(wall, new Vector(10000, 0)));
+            Assert(ball.CollidesWith(wall, new Vector(95, 22)));
+            Assert(!ball.CollidesWith(wall, new Vector(95, 23)));
+            System.Console.WriteLine("Ball hitting wall");
+
+            var post = new Circle(new Vector(81.5f, 49.5f), 8.5f);
+            Assert(ball.CollidesWith(post, new Vector(95, 26)));
+            Assert(!ball.CollidesWith(post, new Vector(95, 25)));
+            System.Console.WriteLine("Ball hitting round post");
+
+            var pellet = new Rectangle(new Vector(169, 60), new Vector(2, 2));
+            Assert(!pellet.CollidesWith(wall, new Vector(-51, -47)));
+            Assert(pellet.CollidesWith(wall, new Vector(-51, -46)));
+            System.Console.WriteLine("Boxy pellet hitting wall");
+
+            var snark1 = new Rectangle(new Vector(3, 79), new Vector(2, 2));
+            var snark2 = new Rectangle(new Vector(49, 111), new Vector(2, 2));
+            Assert(!snark1.CollidesWith(snark2, new Vector(43, 0), new Vector(0, -32)));
+            Assert(snark1.CollidesWith(snark2, new Vector(44, 0), new Vector(0, -32)));
+            Assert(!snark1.CollidesWith(snark2, new Vector(52, 0), new Vector(0, -32)));
+            Assert(snark1.CollidesWith(snark2, new Vector(4300, 0), new Vector(0, -3200)));
+            System.Console.WriteLine("Moving snarks colliding");
         }
 
         private static void TestHulls()
@@ -310,14 +331,14 @@ namespace Collisions
             a = new Vector(8, 2);
             b = new Vector(-2, 8);
             c = new Vector(-5, 5);
-            GameMath.AssertEqual(0, a.DotProductWith(b));
-            Assert(a.DotProductWith(c) < 0);
-            Assert(b.DotProductWith(c) > 0);
+            GameMath.AssertEqual(0, a.DotProduct(b));
+            Assert(a.DotProduct(c) < 0);
+            Assert(b.DotProduct(c) > 0);
 
             a = new Vector(8, 2);
             b = new Vector(-2, 8);
             GameMath.AssertEqual(90, a.EnclosedAngle(b));
-            GameMath.AssertEqual(0, a.DotProductWith(b));
+            GameMath.AssertEqual(0, a.DotProduct(b));
 
             a = new Vector(12, 5);
             b = new Vector(5, 6);

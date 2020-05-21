@@ -1,20 +1,25 @@
 namespace Collisions
 {
-    public struct Rectangle
+    public class Rectangle
     {
         #region Rectangle
 
         public Vector Origin { get; set; }
         public Vector Size { get; set; }
 
-        public Rectangle(Vector origin, Vector size)
+        public Rectangle() { }
+        public Rectangle(Vector origin, Vector size) : this()
         {
             Origin = origin;
             Size = size;
         }
 
+        public Rectangle(Rectangle rectangle) : this(rectangle.Origin, rectangle.Size) { }
+
         public bool Equals(Rectangle rectangle) =>
             this.Origin.Equals(rectangle.Origin) && this.Size.Equals(rectangle.Size);
+
+        public Rectangle Clone => new Rectangle(this.Origin, this.Size);
 
         public override string ToString() => $"Rectangle {{{Origin}, {Size}}}";
 
@@ -25,6 +30,7 @@ namespace Collisions
         public Vector GetCorner(int number)
         {
             var corner = this.Origin;
+
             switch (number)
             {
                 case 0:
@@ -39,6 +45,7 @@ namespace Collisions
                 default:
                     break; // corner = this.Origin
             }
+
             return corner;
         }
 
@@ -64,12 +71,11 @@ namespace Collisions
 
         public Rectangle EnlargeBy(Vector point)
         {
-            var enlarged = new Rectangle(
-                new Vector(this.Origin.X.OrLesser(point.X),
-                    this.Origin.Y.OrLesser(point.Y)),
-                new Vector(point.X.OrGreater(this.Origin.X + this.Size.X),
-                    (point.Y.OrGreater(this.Origin.Y + this.Size.Y))));
+            var enlarged = new Rectangle(new Vector(this.Origin.X.OrLesser(point.X), this.Origin.Y.OrLesser(point.Y)),
+                new Vector(point.X.OrGreater(this.Origin.X + this.Size.X), (point.Y.OrGreater(this.Origin.Y + this.Size.Y))));
+
             enlarged.Size = enlarged.Size.Subtract(enlarged.Origin);
+
             return enlarged;
         }
 
@@ -77,12 +83,14 @@ namespace Collisions
         {
             var maxCorner = extent.Origin.Add(extent.Size);
             var enlarged = this.EnlargeBy(maxCorner);
+
             return enlarged.EnlargeBy(extent.Origin);
         }
 
         public Rectangle GetHullWith(Rectangle[] otherRectangles)
         {
-            var h = new Rectangle(this.Origin, this.Size);
+            var h = this.Clone;
+
             if (otherRectangles == null || otherRectangles.Length == 0) return h;
 
             for (int i = 0; i < otherRectangles.Length; i++)
@@ -118,10 +126,10 @@ namespace Collisions
             c3 = c3.Subtract(line.Base);
             c4 = c4.Subtract(line.Base);
 
-            var dp1 = n.DotProductWith(c1);
-            var dp2 = n.DotProductWith(c2);
-            var dp3 = n.DotProductWith(c3);
-            var dp4 = n.DotProductWith(c4);
+            var dp1 = n.DotProduct(c1);
+            var dp2 = n.DotProduct(c2);
+            var dp3 = n.DotProduct(c3);
+            var dp4 = n.DotProduct(c4);
 
             return dp1 * dp2 <= 0 || dp2 * dp3 <= 0 || dp3 * dp4 <= 0;
         }
@@ -141,8 +149,8 @@ namespace Collisions
             sRange.Minimum = lineSegment.Point1.Y;
             sRange.Maximum = lineSegment.Point2.Y;
             sRange.Sort();
-            if (!rRange.Overlaps(sRange)) return false;
 
+            if (!rRange.Overlaps(sRange)) return false;
             return true;
         }
 
@@ -186,7 +194,7 @@ namespace Collisions
 
         public bool CollidesWith(Rectangle rectangle, Vector speed)
         {
-            var envelope = new Rectangle(this.Origin, this.Size);
+            var envelope = this.Clone;
             envelope.Origin = envelope.Origin.Add(speed);
             envelope = envelope.EnlargeBy(this);
 
@@ -207,6 +215,16 @@ namespace Collisions
             }
             else
                 return false;
+        }
+
+        public bool CollidesWith(Circle circle, Vector speed)
+        {
+            return circle.CollidesWith(this, speed.Negated);
+        }
+
+        public bool CollidesWith(Rectangle rectangle, Vector speed, Vector targetSpeed)
+        {
+            return rectangle.CollidesWith(this, targetSpeed.Subtract(speed));
         }
 
         #endregion

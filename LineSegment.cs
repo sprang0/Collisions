@@ -1,13 +1,14 @@
 namespace Collisions
 {
-    public struct LineSegment
+    public class LineSegment
     {
         #region Line Segment
 
         public Vector Point1 { get; set; }
         public Vector Point2 { get; set; }
 
-        public LineSegment(Vector point1, Vector point2)
+        public LineSegment() { }
+        public LineSegment(Vector point1, Vector point2) : this()
         {
             Point1 = point1;
             Point2 = point2;
@@ -22,7 +23,7 @@ namespace Collisions
         public Range Project(Vector onto)
         {
             var ontoUnit = onto.UnitVector;
-            var range = new Range(ontoUnit.DotProductWith(this.Point1), ontoUnit.DotProductWith(this.Point2));
+            var range = new Range(ontoUnit.DotProduct(this.Point1), ontoUnit.DotProduct(this.Point2));
             range.Sort();
             return range;
         }
@@ -36,7 +37,7 @@ namespace Collisions
             var d = this.Point2.Subtract(this.Point1);
             var p = point.Subtract(this.Point1);
             var pr = p.Project(d);
-            return p.Equals(pr) && pr.Length <= d.Length && pr.DotProductWith(d) >= 0;
+            return p.Equals(pr) && pr.Length <= d.Length && pr.DotProduct(d) >= 0;
         }
 
         public bool CollidesWith(LineSegment lineSegment)

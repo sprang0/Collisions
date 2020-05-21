@@ -6,22 +6,21 @@ namespace Collisions
     public struct Vector
     {
         #region Vector
+
         public float X { get; set; }
         public float Y { get; set; }
 
-        public Vector(float x, float y)
+        public Vector(float x, float y) : this()
         {
             this.X = x;
             this.Y = y;
         }
 
-        public override string ToString() => $"Vector {{{X}, {Y}}}";
-
-        #endregion
-
-        #region Equals
+        public Vector(Vector vector) : this(vector.X, vector.Y) { }
 
         public bool Equals(Vector v) => this.X.Equal(v.X) && this.Y.Equal(v.Y);
+
+        public override string ToString() => $"Vector {{{X}, {Y}}}";
 
         #endregion
 
@@ -34,6 +33,8 @@ namespace Collisions
         public Vector MultiplyBy(float scalar) => new Vector(this.X * scalar, this.Y * scalar);
 
         public Vector DividedBy(float divisor) => new Vector(this.X / divisor, this.Y / divisor);
+
+        public float DotProduct(Vector vector) => this.X * vector.X + this.Y * vector.Y;
 
         public Vector Negated => new Vector(-this.X, -this.Y);
 
@@ -48,6 +49,12 @@ namespace Collisions
             }
         }
 
+        public Vector Rotated90 => new Vector(-this.Y, this.X);
+
+        public Vector Rotated180 => this.Negated;
+
+        public Vector Rotated270 => new Vector(this.Y, -this.X);
+
         public Vector Rotate(float degrees)
         {
             var radians = degrees.ToRadians();
@@ -56,24 +63,20 @@ namespace Collisions
             return new Vector(this.X * cos - this.Y * sin, this.X * sin + this.Y * cos);
         }
 
-        public Vector Rotated90 => new Vector(-this.Y, this.X);
-
         public float EnclosedAngle(Vector vector)
         {
             var ua = this.UnitVector;
             var ub = vector.UnitVector;
-            var dp = ua.DotProductWith(ub);
+            var dp = ua.DotProduct(ub);
             return (Acos(dp)).ToDegrees();
         }
 
-        public float DotProductWith(Vector vector) => this.X * vector.X + this.Y * vector.Y;
-
         public Vector Project(Vector onto)
         {
-            var d = onto.DotProductWith(onto);
+            var d = onto.DotProduct(onto);
             if (d <= 0) return onto;
 
-            var dp = this.DotProductWith(onto);
+            var dp = this.DotProduct(onto);
             return onto.MultiplyBy(dp / d);
         }
 
@@ -83,7 +86,7 @@ namespace Collisions
 
         public bool CollidesWith(Vector point) => this.X.Equals(point.X) && this.Y.Equals(point.Y);
 
-        public bool ParallelWith(Vector line) => this.Rotated90.DotProductWith(line).Equals(0);
+        public bool ParallelWith(Vector line) => this.Rotated90.DotProduct(line).Equals(0);
 
         #endregion
     }

@@ -17,4 +17,8 @@
     <AssemblyVersion>1.0.0.1</AssemblyVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DefineConstants>Y_INCREASES_DOWN</DefineConstants>
+  </PropertyGroup>
+
 </Project>

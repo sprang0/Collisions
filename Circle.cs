@@ -7,13 +7,16 @@ namespace Collisions
         public Vector Center { get; set; }
         public float Radius { get; set; }
 
-        public Circle(Vector center, float radius)
+        public Circle() { }
+        public Circle(Vector center, float radius) : this()
         {
             Center = center;
             Radius = radius;
         }
 
         public bool Equals(Circle circle) => this.Center.Equals(circle.Center) && this.Radius.Equal(circle.Radius);
+
+        public Circle Clone => new Circle(this.Center, this.Radius);
 
         public override string ToString() => $"Circle {{{Center}, {Radius}}}";
 
@@ -23,7 +26,7 @@ namespace Collisions
 
         public Circle GetCircleHullWith(Circle[] otherCircles)
         {
-            var h = new Circle(this.Center, this.Radius);
+            var h = this.Clone;
 
             if (otherCircles == null || otherCircles.Length == 0) return h;
 
@@ -90,7 +93,7 @@ namespace Collisions
             var p = c.Project(d);
             var nearest = lineSegment.Point1.Add(p);
 
-            return this.CollidesWith(nearest) && p.Length <= d.Length && p.DotProductWith(d) >= 0;
+            return this.CollidesWith(nearest) && p.Length <= d.Length && p.DotProduct(d) >= 0;
         }
 
         public bool CollidesWith(Line line)
@@ -132,7 +135,7 @@ namespace Collisions
 
         public bool CollidesWith(Rectangle rectangle, Vector speed)
         {
-            var envelope = new Circle(this.Center, this.Radius);
+            var envelope = this.Clone;
             var halfSpeed = speed.DividedBy(2);
             var moveDistance = speed.Length;
             envelope.Center = this.Center.Add(halfSpeed);

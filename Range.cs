@@ -15,7 +15,7 @@ namespace Collisions
             Maximum = maximum;
         }
 
-        public override string ToString() => $"{{{Minimum}, {Maximum}}}";
+        public override string ToString() => $"Range {{{Minimum}, {Maximum}}}";
 
         #endregion
 

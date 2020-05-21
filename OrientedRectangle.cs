@@ -1,6 +1,6 @@
 namespace Collisions
 {
-    public struct OrientedRectangle
+    public class OrientedRectangle
     {
         #region Oriented Rectangle
 
@@ -8,7 +8,8 @@ namespace Collisions
         public Vector HalfExtent { get; set; }
         public float Rotation { get; set; }
 
-        public OrientedRectangle(Vector center, Vector halfExtent, float rotation)
+        public OrientedRectangle() { }
+        public OrientedRectangle(Vector center, Vector halfExtent, float rotation) : this()
         {
             Center = center;
             HalfExtent = halfExtent;
@@ -57,6 +58,7 @@ namespace Collisions
         public Vector Corner(int number)
         {
             var c = this.HalfExtent;
+
             switch (number)
             {
                 case 0:

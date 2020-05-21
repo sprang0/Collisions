@@ -1,13 +1,14 @@
 namespace Collisions
 {
-    public struct Line
+    public class Line
     {
         #region Line
 
         public Vector Base { get; set; }
         public Vector Direction { get; set; }
 
-        public Line(Vector @base, Vector direction)
+        public Line() { }
+        public Line(Vector @base, Vector direction) : this()
         {
             Base = @base;
             Direction = direction;
@@ -32,7 +33,7 @@ namespace Collisions
             var d1 = segment.Point1.Subtract(this.Base);
             var d2 = segment.Point2.Subtract(this.Base);
             var n = this.Direction.Rotated90;
-            return n.DotProductWith(d1) * n.DotProductWith(d2) > 0;
+            return n.DotProduct(d1) * n.DotProduct(d2) > 0;
         }
 
         #endregion
