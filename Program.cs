@@ -67,7 +67,7 @@ namespace BadKittyGames.Collisions
 
             var c1 = new Circle(new Vector(5, 5), 5);
             rh = c1.GetRectangleHull();
-            Assert(rh.Equals(new Rectangle(new Vector(0, 0), new Vector(10, 10))));
+            Assert(rh.Equals(new Rectangle(Vector.Zero, new Vector(10, 10))));
             System.Console.WriteLine("Rectangle hull for circle");
 
             c1 = new Circle(new Vector(5.5f, 4.5f), 2.5f);

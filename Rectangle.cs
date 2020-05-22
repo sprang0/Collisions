@@ -25,6 +25,32 @@ namespace BadKittyGames.Collisions
 
         #endregion
 
+        #region Calculated Properties
+
+        Vector? center;
+        public Vector Center
+        {
+            get
+            {
+                if (center.HasValue) return center.Value;
+                center = new Vector((Origin.X + Size.X) / 2, (Origin.Y + Size.Y) / 2);
+                return center.Value;
+            }
+        }
+
+        Vector? halfSize;
+        public Vector HalfSize
+        {
+            get
+            {
+                if (halfSize.HasValue) return halfSize.Value;
+                halfSize = new Vector(Size.X / 2, Size.Y / 2);
+                return halfSize.Value;
+            }
+        }
+
+        #endregion
+
         #region Operations
 
         public Vector GetCorner(int number)

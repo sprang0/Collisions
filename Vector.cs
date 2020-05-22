@@ -17,9 +17,18 @@ namespace BadKittyGames.Collisions
 
         public Vector(Vector vector) : this(vector.X, vector.Y) { }
 
+        public static Vector Zero => new Vector(0, 0);
+
         public bool Equals(Vector v) => this.X.Equal(v.X) && this.Y.Equal(v.Y);
 
         public override string ToString() => $"Vector {{{X}, {Y}}}";
+
+        #endregion
+
+        #region Operator Overloads
+
+        public static Vector operator +(Vector vector1, Vector vector2) => vector1.Add(vector2);
+        public static Vector operator -(Vector vector1, Vector vector2) => vector1.Subtract(vector2);
 
         #endregion
 
